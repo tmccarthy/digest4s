@@ -16,7 +16,7 @@ lazy val core = project
   .in(file("core"))
   .settings(settingsHelper.settingsForSubprojectCalled("core"))
   .settings(
-    libraryDependencies += "commons-codec" % "commons-codec" % "1.13",
+    libraryDependencies += "commons-codec" % "commons-codec" % "1.15",
     libraryDependencies += "au.id.tmm.tmm-utils" %% "tmm-utils-testing-core"       % "0.6.2" % Test
   )
 
