@@ -16,7 +16,7 @@ object SafeDigestible {
   @inline def apply[A : SafeDigestible]: SafeDigestible[A] = implicitly[SafeDigestible[A]]
 
   implicit val forArray: SafeDigestible[Array[Byte]] = (utils, array) => utils.digest(array)
-  implicit val forUTF8String: SafeDigestible[String]     = (utils, string) => utils.digest(string)
+  implicit val forUTF8String: SafeDigestible[String] = (utils, string) => utils.digest(string)
   implicit val forByteArray: SafeDigestible[ArraySeq[Byte]] = (utils, array) =>
     utils.digest(array.unsafeArray.asInstanceOf[Array[Byte]])
   implicit val forIterable: SafeDigestible[Iterable[Byte]] = (utils, iterable) => utils.digest(iterable.toArray)
