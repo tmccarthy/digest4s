@@ -5,5 +5,5 @@ object syntax
     with binarycodecs.syntax.BinaryCodecsStringContext.Syntax
     with binarycodecs.syntax.BytesLikeOps.Syntax
     with binarycodecs.syntax.StringOps.Syntax
-    with digest.syntax.SafeDigestibleOps.Syntax
-    with digest.syntax.UnsafeDigestibleOps.Syntax
+    with digest.SafeDigestible.Syntax
+    with digest.UnsafeDigestible.Syntax

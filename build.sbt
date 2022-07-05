@@ -1,22 +1,34 @@
-import au.id.tmm.sbt.DependencySettings
+ThisBuild / tlBaseVersion := "0.1"
 
-ThisBuild / sonatypeProfile := "au.id.tmm"
-ThisBuild / baseProjectName := "digest4s"
-ThisBuild / githubProjectName := "digest4s"
-ThisBuild / githubWorkflowJavaVersions := List("adopt@1.8", "adopt@1.11")
+Sonatype.SonatypeKeys.sonatypeProfileName := "au.id.tmm"
+ThisBuild / organization := "au.id.tmm.digest4s"
+ThisBuild / organizationName := "Timothy McCarthy"
+ThisBuild / startYear := Some(2020)
+//ThisBuild / licenses := Seq(License.Apache2) TODO
+ThisBuild / developers := List(
+  // your GitHub handle and name
+  tlGitHubDev("tmccarthy", "Timothy McCarthy"),
+)
 
-lazy val root = project
-  .in(file("."))
-  .settings(settingsForRootProject)
-  .settings(console := (console in Compile in core).value)
-  .aggregate(
-    core,
-  )
+val Scala213 = "2.13.8"
+ThisBuild / scalaVersion := Scala213
+ThisBuild / crossScalaVersions := Seq(Scala213, "3.1.1")
+
+ThisBuild / tlCiHeaderCheck := false
+ThisBuild / tlCiScalafmtCheck := true
+ThisBuild / tlCiMimaBinaryIssueCheck := false
+
+val mUnitVersion = "0.7.27"
+
+lazy val root = tlCrossRootProject.aggregate(core)
 
 lazy val core = project
   .in(file("core"))
-  .settings(settingsForSubprojectCalled("core"))
+  .settings(name := "digest4s-core")
   .settings(
-    libraryDependencies += "commons-codec"        % "commons-codec"          % "1.15",
-    libraryDependencies += "au.id.tmm.tmm-utils" %% "tmm-utils-testing-core" % "0.9.1" % Test,
+    libraryDependencies += "commons-codec" % "commons-codec" % "1.15",
+  )
+  .settings(
+    testFrameworks += new TestFramework("munit.Framework"),
+    libraryDependencies += "org.scalameta" %% "munit" % mUnitVersion % Test,
   )

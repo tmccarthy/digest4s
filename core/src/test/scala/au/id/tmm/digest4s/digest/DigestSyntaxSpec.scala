@@ -1,4 +1,4 @@
-package au.id.tmm.digest4s.digest.syntax
+package au.id.tmm.digest4s.digest
 
 import java.io.{ByteArrayInputStream, File, IOException, InputStream}
 import java.nio.ByteBuffer
@@ -7,12 +7,8 @@ import java.nio.file.{Files, Path}
 
 import au.id.tmm.digest4s.binarycodecs.BytesLike
 import au.id.tmm.digest4s.binarycodecs.syntax._
-import au.id.tmm.digest4s.digest._
-import au.id.tmm.digest4s.digest.syntax.DigestSyntaxSpec.{
-  DigestTestDimension,
-  SafeDigestibleTestDimension,
-  UnsafeDigestibleTestDimension,
-}
+import au.id.tmm.digest4s.digest.DigestSyntaxSpec.{DigestTestDimension, SafeDigestibleTestDimension, UnsafeDigestibleTestDimension}
+import au.id.tmm.digest4s.digest.syntax._
 import munit.{FunSuite, Location}
 
 import scala.collection.immutable.ArraySeq
