@@ -1,55 +1,23 @@
 package au.id.tmm.digest4s.binarycodecs.syntax
 
+import au.id.tmm.digest4s.binarycodecs.BytesLike
 import org.apache.commons.codec.DecoderException
-import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.collection.immutable.ArraySeq
 
-class BinarySyntaxSpec extends AnyFlatSpec {
+class BinarySyntaxSpec extends AbstractBinaryCodecSyntaxSpec {
 
-  private val validBinaryString = "11011110101000011110000110101101"
-  private val bytes             = ArraySeq[Byte](0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte)
+  override protected def encodingName: String = "binary"
 
-  private val invalidBinaryString = "ZZZZ"
+  override protected def validEncodedString = "11011110101000011110000110101101"
+  override protected def bytes              = new ArraySeq.ofByte(Array(0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte))
 
-  "the binary string context" should "convert some binary to a byte array" in {
-    assert(binary"$validBinaryString" === bytes)
-  }
+  override protected def invalidEncodedString = "ZZZZ"
 
-  it should "throw if invalid binary is provided" in {
-    val exception = intercept[DecoderException](binary"$invalidBinaryString")
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the binary string ops" should "parse a byte array from a binary string" in {
-    assert(validBinaryString.parseBinary === Right(bytes))
-  }
-
-  it should "fail to parse an invalid binary string" in {
-    assert(invalidBinaryString.parseBinary.left.map(_.getClass) === Left(classOf[DecoderException]))
-  }
-
-  it should "parse a byte array from a binary string using parseOrThrow" in {
-    assert(validBinaryString.parseBinary === Right(bytes))
-  }
-
-  it should "throw if parsing an invalid binary string with parseOrThrow" in {
-    val exception = intercept[DecoderException](invalidBinaryString.parseBinaryOrThrow)
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the binary iterable ops" should "encode a ByteArray to binary" in {
-    assert(bytes.asBinaryString === validBinaryString.toLowerCase)
-  }
-
-  it should "encode a list of bytes to binary" in {
-    assert(bytes.toList.asBinaryString === validBinaryString.toLowerCase)
-  }
-
-  "the binary array ops" should "encode an array to binary" in {
-    assert(bytes.unsafeArray.asInstanceOf[Array[Byte]].asBinaryString === validBinaryString.toLowerCase)
-  }
+  override protected def useStringContext(string: String): ArraySeq.ofByte = binary"$string"
+  override protected def useParseExtensionMethod(string: String): Either[DecoderException, ArraySeq.ofByte] =
+    string.parseBinary
+  override protected def useParseOrThrowExtensionMethod(string: String): ArraySeq.ofByte = string.parseBinaryOrThrow
+  override protected def useEncodeExtensionMethod[B : BytesLike](bytes: B): String       = bytes.asBinaryString
 
 }

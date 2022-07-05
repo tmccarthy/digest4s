@@ -1,55 +1,23 @@
 package au.id.tmm.digest4s.binarycodecs.syntax
 
+import au.id.tmm.digest4s.binarycodecs.BytesLike
 import org.apache.commons.codec.DecoderException
-import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.collection.immutable.ArraySeq
 
-class Base32SyntaxSpec extends AnyFlatSpec {
+class Base32SyntaxSpec extends AbstractBinaryCodecSyntaxSpec {
 
-  private val validBase32String = "VXQ2DXQ="
-  private val bytes             = ArraySeq[Byte](0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte)
+  override protected def encodingName: String = "base32"
 
-  private val invalidBase32String = "ابتث"
+  override protected def validEncodedString = "VXQ2DXQ="
+  override protected def bytes              = new ArraySeq.ofByte(Array(0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte))
 
-  "the base32 string context" should "convert some base32 to a byte array" in {
-    assert(base32"$validBase32String" === bytes)
-  }
+  override protected def invalidEncodedString = "ابتث"
 
-  it should "throw if invalid base32 is provided" in {
-    val exception = intercept[DecoderException](base32"$invalidBase32String")
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the base32 string ops" should "parse a byte array from a base32 string" in {
-    assert(validBase32String.parseBase32 === Right(bytes))
-  }
-
-  it should "fail to parse an invalid base32 string" in {
-    assert(invalidBase32String.parseBase32.left.map(_.getClass) === Left(classOf[DecoderException]))
-  }
-
-  it should "parse a byte array from a base32 string using parseOrThrow" in {
-    assert(validBase32String.parseBase32 === Right(bytes))
-  }
-
-  it should "throw if parsing an invalid base32 string with parseOrThrow" in {
-    val exception = intercept[DecoderException](invalidBase32String.parseBase32OrThrow)
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the base32 iterable ops" should "encode a ByteArray to base32" in {
-    assert(bytes.asBase32String === validBase32String)
-  }
-
-  it should "encode a list of bytes to base32" in {
-    assert(bytes.toList.asBase32String === validBase32String)
-  }
-
-  "the base32 array ops" should "encode an array to base32" in {
-    assert(bytes.unsafeArray.asInstanceOf[Array[Byte]].asBase32String === validBase32String)
-  }
+  override protected def useStringContext(string: String): ArraySeq.ofByte = base32"$string"
+  override protected def useParseExtensionMethod(string: String): Either[DecoderException, ArraySeq.ofByte] =
+    string.parseBase32
+  override protected def useParseOrThrowExtensionMethod(string: String): ArraySeq.ofByte = string.parseBase32OrThrow
+  override protected def useEncodeExtensionMethod[B : BytesLike](bytes: B): String       = bytes.asBase32String
 
 }

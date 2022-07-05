@@ -1,55 +1,23 @@
 package au.id.tmm.digest4s.binarycodecs.syntax
 
+import au.id.tmm.digest4s.binarycodecs.BytesLike
 import org.apache.commons.codec.DecoderException
-import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.collection.immutable.ArraySeq
 
-class Base64SyntaxSpec extends AnyFlatSpec {
+class Base64SyntaxSpec extends AbstractBinaryCodecSyntaxSpec {
 
-  private val validBase64String = "reGh3g=="
-  private val bytes             = ArraySeq[Byte](0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte)
+  override protected def encodingName: String = "base64"
 
-  private val invalidBase64String = "ابتث"
+  override protected def validEncodedString = "reGh3g=="
+  override protected def bytes              = new ArraySeq.ofByte(Array(0xad.toByte, 0xe1.toByte, 0xa1.toByte, 0xde.toByte))
 
-  "the base64 string context" should "convert some base64 to a byte array" in {
-    assert(base64"$validBase64String" === bytes)
-  }
+  override protected def invalidEncodedString = "ابتث"
 
-  it should "throw if invalid base64 is provided" in {
-    val exception = intercept[DecoderException](base64"$invalidBase64String")
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the base64 string ops" should "parse a byte array from a base64 string" in {
-    assert(validBase64String.parseBase64 === Right(bytes))
-  }
-
-  it should "fail to parse an invalid base64 string" in {
-    assert(invalidBase64String.parseBase64.left.map(_.getClass) === Left(classOf[DecoderException]))
-  }
-
-  it should "parse a byte array from a base64 string using parseOrThrow" in {
-    assert(validBase64String.parseBase64 === Right(bytes))
-  }
-
-  it should "throw if parsing an invalid base64 string with parseOrThrow" in {
-    val exception = intercept[DecoderException](invalidBase64String.parseBase64OrThrow)
-
-    assert(exception.getClass === classOf[DecoderException])
-  }
-
-  "the base64 iterable ops" should "encode a ByteArray to base64" in {
-    assert(bytes.asBase64String === validBase64String)
-  }
-
-  it should "encode a list of bytes to base64" in {
-    assert(bytes.toList.asBase64String === validBase64String)
-  }
-
-  "the base64 array ops" should "encode an array to base64" in {
-    assert(bytes.unsafeArray.asInstanceOf[Array[Byte]].asBase64String === validBase64String)
-  }
+  override protected def useStringContext(string: String): ArraySeq.ofByte = base64"$string"
+  override protected def useParseExtensionMethod(string: String): Either[DecoderException, ArraySeq.ofByte] =
+    string.parseBase64
+  override protected def useParseOrThrowExtensionMethod(string: String): ArraySeq.ofByte = string.parseBase64OrThrow
+  override protected def useEncodeExtensionMethod[B : BytesLike](bytes: B): String       = bytes.asBase64String
 
 }
