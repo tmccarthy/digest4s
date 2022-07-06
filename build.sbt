@@ -4,7 +4,7 @@ Sonatype.SonatypeKeys.sonatypeProfileName := "au.id.tmm"
 ThisBuild / organization := "au.id.tmm.digest4s"
 ThisBuild / organizationName := "Timothy McCarthy"
 ThisBuild / startYear := Some(2020)
-//ThisBuild / licenses := Seq(License.Apache2) TODO
+ThisBuild / licenses := Seq(License.Apache2)
 ThisBuild / developers := List(
   // your GitHub handle and name
   tlGitHubDev("tmccarthy", "Timothy McCarthy"),

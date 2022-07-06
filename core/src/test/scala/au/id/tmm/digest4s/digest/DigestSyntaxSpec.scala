@@ -7,7 +7,11 @@ import java.nio.file.{Files, Path}
 
 import au.id.tmm.digest4s.binarycodecs.BytesLike
 import au.id.tmm.digest4s.binarycodecs.syntax._
-import au.id.tmm.digest4s.digest.DigestSyntaxSpec.{DigestTestDimension, SafeDigestibleTestDimension, UnsafeDigestibleTestDimension}
+import au.id.tmm.digest4s.digest.DigestSyntaxSpec.{
+  DigestTestDimension,
+  SafeDigestibleTestDimension,
+  UnsafeDigestibleTestDimension,
+}
 import au.id.tmm.digest4s.digest.syntax._
 import munit.{FunSuite, Location}
 
