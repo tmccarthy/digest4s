@@ -1,6 +1,5 @@
 # `digest4s`
 
-[![CircleCI](https://circleci.com/gh/tmccarthy/digest4s/tree/main.svg?style=shield)](https://circleci.com/gh/tmccarthy/digest4s/tree/main)
 [![Maven Central](https://img.shields.io/maven-central/v/au.id.tmm.digest4s/digest4s-core_2.13.svg)](https://repo.maven.apache.org/maven2/au/id/tmm/digest4s/digest4s-core_2.13/)
 
 A set of utilities for generating digests and handling binary codecs in Scala. Built on top of [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/).

@@ -32,3 +32,6 @@ lazy val core = project
     testFrameworks += new TestFramework("munit.Framework"),
     libraryDependencies += "org.scalameta" %% "munit" % mUnitVersion % Test,
   )
+
+addCommandAlias("check", ";githubWorkflowCheck;scalafmtSbtCheck;+scalafmtCheckAll;+test")
+addCommandAlias("fix", ";githubWorkflowGenerate;+scalafmtSbt;+scalafmtAll")
