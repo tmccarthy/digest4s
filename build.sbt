@@ -1,3 +1,5 @@
+name := "digest4s"
+
 ThisBuild / tlBaseVersion := "0.1"
 
 Sonatype.SonatypeKeys.sonatypeProfileName := "au.id.tmm"
@@ -13,6 +15,11 @@ ThisBuild / developers := List(
 val Scala213 = "2.13.8"
 ThisBuild / scalaVersion := Scala213
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.1.1")
+
+ThisBuild / githubWorkflowJavaVersions := List(
+  JavaSpec.temurin("1.8"),
+  JavaSpec.temurin("1.11"),
+)
 
 ThisBuild / tlCiHeaderCheck := false
 ThisBuild / tlCiScalafmtCheck := true
