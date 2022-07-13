@@ -135,6 +135,7 @@ object DigestSyntaxSpec {
         ) {
       override def unsafe[A : UnsafeDigestible](a: A): Either[IOException, SHA384Digest] = a.sha384OrError
       override def safe[A : SafeDigestible](a: A): SHA384Digest                          = a.sha384
+      override def javaVersionCompatible: Boolean                                        = !isJava8
     }
     case object ForSHA512
         extends DigestTestDimension[SHA512Digest](
@@ -263,6 +264,10 @@ object DigestSyntaxSpec {
     )
   }
 
-  private def isJava8: Boolean = System.getProperty("java.specification.version") == "1.8"
+  private def isJava8: Boolean = {
+    val specVersion = System.getProperty("java.specification.version")
+    println(s"***** specVersion = '$specVersion'")
+    specVersion == "1.8"
+  }
 
 }

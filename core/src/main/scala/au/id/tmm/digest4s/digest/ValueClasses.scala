@@ -25,7 +25,8 @@ abstract class DigestValueClassCompanion[D] private[digest] (
   algorithm: String,
 ) {
 
-  private val apacheDigestUtils = new ApacheDigestUtils(algorithm)
+  // Note that this will throw if the algorithm's not present in this Java version
+  @inline private def apacheDigestUtils = new ApacheDigestUtils(algorithm)
 
   def digest[A : SafeDigestible](a: A): D = make(new ArraySeq.ofByte(SafeDigestible[A].digest(apacheDigestUtils, a)))
 
