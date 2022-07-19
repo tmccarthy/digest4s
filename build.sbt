@@ -24,6 +24,7 @@ ThisBuild / githubWorkflowJavaVersions := List(
 ThisBuild / tlCiHeaderCheck := false
 ThisBuild / tlCiScalafmtCheck := true
 ThisBuild / tlCiMimaBinaryIssueCheck := false
+ThisBuild / tlFatalWarnings := true
 
 val mUnitVersion = "0.7.27"
 
