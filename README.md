@@ -10,7 +10,7 @@ Add the following to your `build.sbt` file. The latest version of the library sh
 Otherwise you can checkout [the artefact listing on `mvnrepository.com`](https://mvnrepository.com/artifact/au.id.tmm.digest4s/digest4s-core).
 
 ```scala
-libraryDependencies += "au.id.tmm.digest4s" %% "digest4s-core" % "0.0.1"
+libraryDependencies += "au.id.tmm.digest4s" %% "digest4s-core" % "0.1.0"
 ```
 
 The simplest way to use the library is with the syntax import:
