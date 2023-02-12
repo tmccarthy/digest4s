@@ -37,7 +37,7 @@ class DigestSyntaxSpec extends FunSuite {
   )(implicit
     loc: Location,
   ): Unit = {
-    implicit val safeDigestableInstance: SafeDigestible[A] = digestibleTestDimension.safeDigestible
+    implicit val safeDigestibleInstance: SafeDigestible[A] = digestibleTestDimension.safeDigestible
     implicit val bytesLikeInstance: BytesLike[D]           = digestTestDimension.bytesLike
 
     digestTestDimension.tests.foreach { case (bytes, expectedDigest) =>
@@ -47,6 +47,23 @@ class DigestSyntaxSpec extends FunSuite {
         s"${digestTestDimension.classTag.runtimeClass.getSimpleName} for ${digestibleTestDimension.name} (${bytes.asHexString} -> ${expectedDigest.asHexString})",
       ) {
         val obtained = digestTestDimension.safe(a)
+        assertEquals(obtained, expectedDigest, obtained.asHexString)
+      }
+
+      test(
+        s"${digestTestDimension.classTag.runtimeClass.getSimpleName} (as UnsafeDigestible) for ${digestibleTestDimension.name} (${bytes.asHexString} -> ${expectedDigest.asHexString})",
+      ) {
+        implicit val unsafeDigestibleInstance: UnsafeDigestible[A] = safeDigestibleInstance.asUnsafeDigestible
+        val obtained                                               = digestTestDimension.unsafe(a)
+        assertEquals(obtained, Right(expectedDigest), obtained.map(_.asHexString))
+      }
+
+      test(
+        s"${digestTestDimension.classTag.runtimeClass.getSimpleName} (contraMapped) for ${digestibleTestDimension.name} (${bytes.asHexString} -> ${expectedDigest.asHexString})",
+      ) {
+        implicit val contraMappedInstance: SafeDigestible[Array[Byte]] =
+          safeDigestibleInstance.contraMap(digestibleTestDimension.fromBytes)
+        val obtained = digestTestDimension.safe(bytes)
         assertEquals(obtained, expectedDigest, obtained.asHexString)
       }
     }
@@ -59,7 +76,7 @@ class DigestSyntaxSpec extends FunSuite {
     loc: Location,
   ): Unit =
     digestTestDimension.tests.foreach { case (bytes, expectedDigest) =>
-      implicit val safeDigestableInstance: UnsafeDigestible[A] = digestibleTestDimension.unsafeDigestible
+      implicit val safeDigestibleInstance: UnsafeDigestible[A] = digestibleTestDimension.unsafeDigestible
       implicit val bytesLikeInstance: BytesLike[D]             = digestTestDimension.bytesLike
 
       val a: A = digestibleTestDimension.fromBytes(bytes)
@@ -68,6 +85,15 @@ class DigestSyntaxSpec extends FunSuite {
         s"${digestTestDimension.classTag.runtimeClass.getSimpleName} for ${digestibleTestDimension.classTag.runtimeClass.getSimpleName} (${bytes.asHexString} -> ${expectedDigest.asHexString})",
       ) {
         val obtained = digestTestDimension.unsafe(a)
+        assertEquals(obtained, Right(expectedDigest), obtained.map(_.asHexString))
+      }
+
+      test(
+        s"${digestTestDimension.classTag.runtimeClass.getSimpleName} (contraMapped) for ${digestibleTestDimension.classTag.runtimeClass.getSimpleName} (${bytes.asHexString} -> ${expectedDigest.asHexString})",
+      ) {
+        implicit val contraMappedInstance: UnsafeDigestible[Array[Byte]] =
+          safeDigestibleInstance.contraMap(digestibleTestDimension.fromBytes)
+        val obtained = digestTestDimension.unsafe(bytes)
         assertEquals(obtained, Right(expectedDigest), obtained.map(_.asHexString))
       }
     }

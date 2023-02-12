@@ -17,8 +17,9 @@ ThisBuild / scalaVersion := Scala213
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.1.1")
 
 ThisBuild / githubWorkflowJavaVersions := List(
-  JavaSpec.temurin("8"),
+  JavaSpec.temurin("17"),
   JavaSpec.temurin("11"),
+  JavaSpec.temurin("8"),
 )
 
 ThisBuild / tlCiHeaderCheck := false

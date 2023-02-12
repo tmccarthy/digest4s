@@ -9,7 +9,17 @@ import org.apache.commons.codec.digest.DigestUtils
 import scala.collection.immutable.ArraySeq
 
 trait SafeDigestible[-A] {
-  protected[digest] def digest(digestUtils: DigestUtils, a: A): Array[Byte]
+  def digest(digestUtils: DigestUtils, a: A): Array[Byte]
+
+  def contraMap[B](f: B => A): SafeDigestible[B] = new SafeDigestible[B] {
+    override def digest(digestUtils: DigestUtils, b: B): Array[Byte] =
+      SafeDigestible.this.digest(digestUtils, f(b))
+  }
+
+  def asUnsafeDigestible: UnsafeDigestible[A] = new UnsafeDigestible[A] {
+    override def unsafeDigest(digestUtils: DigestUtils, a: A): Array[Byte] =
+      SafeDigestible.this.digest(digestUtils, a)
+  }
 }
 
 object SafeDigestible {
@@ -44,13 +54,18 @@ object SafeDigestible {
 }
 
 trait UnsafeDigestible[-A] {
-  protected def unsafeDigest(digestUtils: DigestUtils, a: A): Array[Byte]
+  def unsafeDigest(digestUtils: DigestUtils, a: A): Array[Byte]
 
   private[digest] def digest(digestUtils: DigestUtils, a: A): Either[IOException, Array[Byte]] =
     try Right(unsafeDigest(digestUtils, a))
     catch {
       case e: IOException => Left(e)
     }
+
+  def contraMap[B](f: B => A): UnsafeDigestible[B] = new UnsafeDigestible[B] {
+    override def unsafeDigest(digestUtils: DigestUtils, b: B): Array[Byte] =
+      UnsafeDigestible.this.unsafeDigest(digestUtils, f(b))
+  }
 }
 
 object UnsafeDigestible {
